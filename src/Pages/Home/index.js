@@ -4,6 +4,6 @@ export const Home = () => {
   return (
     <Fragment>
       <Navbar />
-    </Fragment>
+    </Fragment> 
   );
 };
