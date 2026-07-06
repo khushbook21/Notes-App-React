@@ -2,9 +2,10 @@ import { NavLink } from "react-router-dom";
 export const Sidebar = () => {
 
      const getStyles = ({ isActive }) => {
+      const styles='flex align-center gap-1 px-2 py-1 rounded-tr-full rounded-br-full'
     return isActive
-      ? "hover:bg-indigo-800 flex items-center gap-1 px-2 py-1"
-      : "flex items-center gap-1";
+      ? `bg-indigo-800 text-slate-50 font-bold ${styles}`
+      : `hover:bg-indigo-800 hover:text-slate-50 font-bold ${styles}`
   };
 
   return (
@@ -14,17 +15,17 @@ export const Sidebar = () => {
         <span>Home</span>
       </NavLink>
 
-      <NavLink className="flex align-center gap-1" to="/archive">
-        <span className="material-symbols-outlined">archive</span>
+      <NavLink className={getStyles} to="/archive">
+        <span className="material-symbols-outlined">archive</span>  
         <span>Archive</span>
       </NavLink>
 
-      <NavLink className="flex align-center gap-1" to="/important">
+      <NavLink className={getStyles} to="/important">
         <span className="material-symbols-outlined">label_important</span>
         <span>Important</span>
       </NavLink>
 
-      <NavLink className="flex align-center gap-1" to="/bin">
+      <NavLink className={getStyles} to="/bin">
         <span className="material-symbols-outlined">delete</span>
         <span>Bin</span>
       </NavLink>
