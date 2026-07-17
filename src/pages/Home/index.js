@@ -1,28 +1,22 @@
 import { Navbar } from "../../components/Navbar";
-import { Fragment, useReducer } from "react";
+import { Fragment } from "react";
 import { Sidebar } from "../../components/Sidebar";
-import { notesReducer } from "../../reducers/noteReducer";
+import { NotesCard } from "../../components/NotesCard";
+import { useNotes } from "../../context/notes-context";
+
+// import { notesReducer } from "../../reducers/noteReducer";
 
 export const Home = () => {
-  const initialState = {
-    title: "",
-    text: "",
-    notes: [],
-  };
-  const [{ title, text, notes }, notesDispatch] = useReducer(
-    notesReducer,
-    initialState,
-  );
-
-  // const onTitleChange = (e) => ({
-  //   type: "TITLE",
-  //   payload: e.target.value,
-  // });
-
-  // const onTextChange = (e) => ({
-  //   type: "TEXT",
-  //   payload: e.target.value,
-  // });
+  const { title, text, notes, notesDispatch } = useNotes();
+  // const initialState = {
+  //   title: "",
+  //   text: "",
+  //   notes: [],
+  // };
+  // const [{ title, text, notes }, notesDispatch] = useReducer(
+  //   notesReducer,
+  //   initialState,
+  // );
 
   const onTitleChange = (e) => {
     notesDispatch({
@@ -47,10 +41,11 @@ export const Home = () => {
       type: "CLEAR_INPUT",
     });
   };
-  console.log(notes);
 
-  // const [text,setText]=useState("")
-  // const [title,setTitle]=useState("")
+  const pinnedNotes =
+    notes?.length > 0 && notes.filter(({ isPinned }) => isPinned);
+  const otherNotes =
+    notes?.length > 0 && notes.filter(({ isPinned }) => !isPinned);
 
   return (
     <Fragment>
@@ -58,57 +53,57 @@ export const Home = () => {
       <main className="flex gap-3">
         <Sidebar />
         <div>
-          <div className="flex flex-col w-[300px] border border-red-300 relative">
+          <div className="flex flex-col w-[300px] border relative">
             <input
               value={title}
               onChange={onTitleChange}
-              className="border"
+              className="border border-neutral-800 rounded-t-md focus:outline-none border-b-0 p-1"
               placeholder="Enter title"
             />
             <textarea
               value={text}
               onChange={onTextChange}
-              className="border"
+              className="border border-neutral-800 rounded-b-md focus:outline-none border-t-0 p-1"
               placeholder="Enter Text"
             />
             <button
               disabled={title.length === 0}
               onClick={onAddClick}
-              className="absolute bottom-0 right-0"
+              className="absolute bottom-0 right-0 w-7 h-7 bg-indigo-800 text-slate-50 rounded-full"
             >
-              <span className="material-symbols-outlined">Add</span>
+              <span className="material-icons-outlined">add</span>
             </button>
           </div>
-          <div className="mt-14 flex flex-wrap gap-6">
-            {notes?.length > 0 &&
-              notes.map(({ id, title, text }) => (
-                <div className="w-56 border border-neutral-800 p-2 rounded-md" key={id}>
-                  <div className="flex justify-between">
-                    <p>{title}</p>
-                    <button>
-                      <span className="material-symbols-outlined">
-                        bookmark
-                      </span>
-                    </button>
-                  </div>
 
-                  <div className="flex flex-col">
-                    <p>{text}</p>
-                    <div className="ml-auto">
-                      <button>
-                        <span className="material-symbols-outlined">
-                          Archive
-                        </span>
-                      </button>
+          {pinnedNotes?.length > 0 && (
+            <>
+              <h3 className="mt-14">Pinned Notes</h3>
+              <div className=" flex flex-wrap gap-6">
+                {pinnedNotes?.length > 0 &&
+                  pinnedNotes.map(({ id, title, text, isPinned }) => (
+                    <NotesCard
+                      key={id}
+                      id={id}
+                      title={title}
+                      text={text}
+                      isPinned={isPinned}
+                    />
+                  ))}
+              </div>
+            </>
+          )}
 
-                      <button>
-                        <span className="material-symbols-outlined">
-                          Delete
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+          {pinnedNotes?.length > 0 && <h3>Other Notes</h3>}
+          <div className=" flex flex-wrap gap-6">
+            {otherNotes?.length > 0 &&
+              otherNotes.map(({ id, title, text, isPinned }) => (
+                <NotesCard
+                  key={id}
+                  id={id}
+                  title={title}
+                  text={text}
+                  isPinned={isPinned}
+                />
               ))}
           </div>
         </div>
